@@ -24,6 +24,8 @@ public class RegistroActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressDialog progress;
 
+
+
     @Bind(R.id.txtRegistroUsuario)
     EditText txtRegistroUsuario;
 
