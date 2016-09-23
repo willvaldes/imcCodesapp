@@ -9,4 +9,10 @@
     <string name="txt_registro_usuario">E-mail</string>
     <string name="btn_registro_crearcuenta">Crear Cuenta</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
