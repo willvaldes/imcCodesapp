@@ -1,11 +1,16 @@
-package co.com.codesa.imccodesa.activities;
+package co.com.codesa.imccodesa.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,8 +23,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.com.codesa.imccodesa.R;
+import co.com.codesa.imccodesa.activities.ListaIMCActivity;
 
-public class RegistroActivity extends AppCompatActivity {
+public class RegistroFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private ProgressDialog progress;
@@ -29,33 +35,37 @@ public class RegistroActivity extends AppCompatActivity {
     @Bind(R.id.txtRegistroPassword)
     EditText txtRegistroPassword;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
 
-        ButterKnife.bind(this);
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_registro, null);
+        ButterKnife.bind(view);
 
         mAuth = FirebaseAuth.getInstance();
+
+        return view;
     }
 
     @OnClick(R.id.btnRegistroCrearCuenta)
     public void clickRegistroCrearCuenta() {
 
-        progress = ProgressDialog.show(this, "Procesando", "Creando la cuenta..");
+        progress = ProgressDialog.show(getContext(), "Procesando", "Creando la cuenta..");
 
         mAuth.createUserWithEmailAndPassword(txtRegistroUsuario.getText().toString(),
                 txtRegistroPassword.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(RegistroActivity.class.getName(), "Tarea completa: " + task.isSuccessful());
+                        Log.d(RegistroFragment.class.getName(), "Tarea completa: " + task.isSuccessful());
 
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(RegistroActivity.this, ListaIMCActivity.class);
+                            Intent intent = new Intent(getContext(), ListaIMCActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(RegistroActivity.this, task.getException().getMessage(),
+                            Toast.makeText(getContext(), task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
 

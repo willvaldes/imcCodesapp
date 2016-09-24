@@ -1,12 +1,16 @@
-package co.com.codesa.imccodesa.activities;
+package co.com.codesa.imccodesa.fragments;
 
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,8 +23,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.com.codesa.imccodesa.R;
+import co.com.codesa.imccodesa.activities.ListaIMCActivity;
 
-public class AutenticacionActivity extends AppCompatActivity {
+public class AutenticacionFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private ProgressDialog progress;
@@ -31,35 +36,37 @@ public class AutenticacionActivity extends AppCompatActivity {
     @Bind(R.id.txtLoginPassword)
     EditText txtLoginPassword;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_autenticacion);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        ButterKnife.bind(this);
+        View view = inflater.inflate(R.layout.fragment_autenticacion, null);
+        ButterKnife.bind(this,view);
 
         mAuth = FirebaseAuth.getInstance();
+
+        return view;
     }
 
     @OnClick(R.id.btnLoginIngresar)
     public void clikIngresar() {
 
-        progress = ProgressDialog.show(this, "Procesando", "Comprobando datos de ingreso...");
+        progress = ProgressDialog.show(getContext(), "Procesando", "Comprobando datos de ingreso...");
 
         String email = txtLoginUsuario.getText().toString();
         String password = txtLoginPassword.getText().toString();
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(RegistroActivity.class.getName(), "Resultado Log In : " + task.isSuccessful());
+                        Log.d(RegistroFragment.class.getName(), "Resultado Log In : " + task.isSuccessful());
 
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(AutenticacionActivity.this, ListaIMCActivity.class);
+                            Intent intent = new Intent(getContext(), ListaIMCActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(AutenticacionActivity.this, task.getException().getMessage(),
+                            Toast.makeText(getContext(), task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -71,8 +78,14 @@ public class AutenticacionActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnLoginCrearCuenta)
     public void clikCrearCuenta() {
-        Intent intent = new Intent(this, RegistroActivity.class);
-        startActivity(intent);
+
+        RegistroFragment registroFragment = new RegistroFragment();
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, registroFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
 }

@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import co.com.codesa.imccodesa.R;
+import co.com.codesa.imccodesa.fragments.AutenticacionFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            Intent intent = new Intent(this, AutenticacionActivity.class);
+            Intent intent = new Intent(this, ImcActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
 
