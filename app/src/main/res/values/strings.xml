@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">imccodesa</string>
+    <string name="app_name" translatable="false">imccodesa</string>
     <string name="txt_login_usuario">E-mail</string>
     <string name="txt_login_password">Contraseña</string>
     <string name="btn_login_ingresar">Ingresar</string>
