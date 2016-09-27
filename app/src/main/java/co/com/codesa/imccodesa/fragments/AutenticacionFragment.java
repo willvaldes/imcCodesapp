@@ -1,7 +1,9 @@
 package co.com.codesa.imccodesa.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,9 +44,13 @@ public class AutenticacionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_autenticacion, null);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         mAuth = FirebaseAuth.getInstance();
+        SharedPreferences sp = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("isSigned", false);
+        editor.commit();
 
         return view;
     }
@@ -63,6 +70,13 @@ public class AutenticacionFragment extends Fragment {
                         Log.d(RegistroFragment.class.getName(), "Resultado Log In : " + task.isSuccessful());
 
                         if (task.isSuccessful()) {
+                            SharedPreferences sp = getContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            editor.putString("userEmail", user.getEmail());
+                            editor.putString("userName", user.getDisplayName());
+                            editor.commit();
+
                             Intent intent = new Intent(getContext(), ListaIMCActivity.class);
                             startActivity(intent);
                         } else {
